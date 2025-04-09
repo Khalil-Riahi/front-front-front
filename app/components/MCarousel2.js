@@ -10,18 +10,18 @@ import {
 } from "./ui/carousel";
 
 // Example image URLs (replace with your actual image paths or URLs)
-const images = [
-  "/openspace.jpg",
-  "/openspace1.jpg",
-  "/openspace2.jpg",
-  "/openspace.jpg"
-];
+// const images = [
+//   "/openspace.jpg",
+//   "/openspace1.jpg",
+//   "/openspace2.jpg",
+//   "/openspace.jpg"
+// ];
 
-export function MyCarousel2() {
+export function MyCarousel2({images}) {
   return (
     <Carousel opts={{ align: "start", loop: true }} className="w-full">
       <CarouselContent className="flex">
-        {images.map((src, index) => (
+        {images?.map((src, index) => (
           <CarouselItem key={index} className="basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/3 xl:basis-1/3">
             <div className="w-full h-full">
             <img

@@ -5,12 +5,22 @@ import ImagesComponent from "../../components/imagesComponent";
 import Benifits from "../../components/benefits";
 import Services from "../../components/services";
 import Footer from '@/app/components/footer';
+import heroImg2 from "./../../../public/openspace.jpg";
+
 
 import { useState , useEffect} from "react";
 
 
 
 
+
+const images = [
+    "/openspace.jpg",
+    "/openspace1.jpg",
+    "/openspace2.jpg",
+    "/openspace.jpg"
+  ];
+  
 
 export default function OpenSpaceRoom(){
 
@@ -38,8 +48,8 @@ export default function OpenSpaceRoom(){
     return(
         <>
             <NavBar />
-            <Hero />
-            <ImagesComponent />
+            <Hero image={heroImg2}/>
+            <ImagesComponent images={images}/>
             <Benifits subs={fetchedData}/>
             <Services />
             <Footer />

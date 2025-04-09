@@ -2,13 +2,13 @@ import Image from "next/image";
 import Container from "./Container";
 import heroImg2 from "../../public/openspace.jpg"; // Ensure this path is correct
 
-export default function Hero2() {
+export default function Hero2({image}) {
   return (
     <div className="h-[690px] text-gray-900 mb-20 bg-opacity-50">
       {/* Large Screen Layout */}
       <div
         className="hidden md:block h-full bg-cover bg-center "
-        style={{ backgroundImage: `url(${heroImg2.src})`}}
+        style={{ backgroundImage: `url(${image.src})`}}
 
       >
         <div className="w-full max-w-screen-xl mx-4 px-4 xl:px-8 flex flex-wrap h-full">

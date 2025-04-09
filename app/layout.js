@@ -64,6 +64,7 @@ export default function RootLayout({ children }) {
         {/* Include meta tags, fonts, etc. */}
       </head>
       <body>
+        <div id="modal"></div>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           {children}
         </ThemeProvider>
