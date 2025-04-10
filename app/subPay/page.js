@@ -1,115 +1,257 @@
-'use client'; 
+// 'use client'; 
 
-import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
+// import { useSearchParams } from "next/navigation";
+// import { useEffect, useState } from "react";
+// import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
+
+// export default function PaymentVerify() {
+//   const [isWorked, setIsWorked] = useState(null);
+//   const [error, setError] = useState(null);
+//   const [userId, setUserId] = useState(null);
+//   const [subId, setSubId] = useState(null);
+//   // const [start_date , setStartDate] = useState(null)
+//   // const [end_date , setEndDate] = useState(null)
+
+
+//   const searchParams = useSearchParams();
+//   const status = searchParams.get("status");
+//   const paymentId = searchParams.get("payment_ref");
+//   const start_date = searchParams.get("start_date")
+//   const end_date = searchParams.get("end_date")
+
+
+  
+
+//   // Get userId and subId on client side
+//   useEffect(() => {
+//     const storedUserId = localStorage.getItem('userId');
+//     const storedSubId = searchParams.get("subId");
+
+//     setUserId(storedUserId);
+//     setSubId(storedSubId);
+
+//     console.log('Received parameters:', {
+//       status,
+//       paymentId,
+//       userId: storedUserId,
+//       subId: storedSubId,
+//       start_date: start_date,
+//       end_date: end_date
+//     });
+//   }, [searchParams, status, paymentId , start_date , end_date]);
+
+//   // Verify payment once data is loaded
+//   useEffect(() => {
+//     if (!userId || !subId) return;
+
+//     console.log('Verification useEffect triggered');
+
+//     if (status === "failed") {
+//       console.log('Immediate failure detected');
+//       setIsWorked(false);
+//       setError("Payment failed. Please try again.");
+//       return;
+//     }
+
+//     if (status !== "success" || !paymentId) {
+//       console.log('Missing required parameters:', {
+//         hasStatus: !!status,
+//         hasPaymentId: !!paymentId,
+//         hasUserId: !!userId,
+//         hasSubId: !!subId,
+//       });
+//       return;
+//     }
+
+//     async function verifyAndAddUserSubscription() {
+//       console.log('Starting verification...');
+//       try {
+//         const url = `http://localhost:8000/ELACO/subcription/verify/${paymentId}?idUser=${userId}&subId=${subId}&start_date=${start_date}&end_date=${end_date}`;
+//         console.log('Making request to:', url);
+
+//         const response = await fetch(url, {
+//           method: "GET",
+//           credentials: "include",
+//           headers: {
+//             'Content-Type': 'application/json',
+//           }
+//         });
+
+//         console.log('Response status:', response.status);
+
+//         if (!response.ok) {
+//           const errorText = await response.text();
+//           throw new Error(errorText || "Payment verification failed");
+//         }
+
+//         const resData = await response.json();
+//         console.log('Verification response:', resData);
+
+//         if (resData.status !== "success") {
+//           throw new Error(resData.message || "Payment was not successful");
+//         }
+
+//         setIsWorked(true);
+//       } catch (error) {
+//         console.error("Full error details:", error);
+//         setError(error.message);
+//         setIsWorked(false);
+//       }
+//     }
+
+//     verifyAndAddUserSubscription();
+//   }, [status, paymentId, userId, subId]);
+
+//   return (
+//     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50 p-4">
+//       <div className="w-full max-w-md bg-white rounded-xl shadow-2xl p-8 text-center">
+//         {/* Loading */}
+//         {isWorked === null && status === "success" && (
+//           <div className="space-y-4">
+//             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto"></div>
+//             <p className="text-gray-600 text-lg">Verifying your payment...</p>
+//           </div>
+//         )}
+
+//         {/* Success */}
+//         {isWorked === true && (
+//           <div className="space-y-4">
+//             <FaCheckCircle className="text-6xl text-green-500 mx-auto animate-bounce" />
+//             <h2 className="text-2xl font-bold text-green-600">Payment Successful!</h2>
+//             <button
+//               onClick={() => window.location.href = "/homepage"}
+//               className="w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 transition"
+//             >
+//               Go to Dashboard
+//             </button>
+//           </div>
+//         )}
+
+//         {/* Failure */}
+//         {isWorked === false && (
+//           <div className="space-y-4">
+//             <FaTimesCircle className="text-6xl text-red-500 mx-auto animate-shake" />
+//             <h2 className="text-2xl font-bold text-red-600">Payment Failed</h2>
+//             <p className="text-gray-600">{error || "Something went wrong. Please try again."}</p>
+//             <button
+//               onClick={() => window.location.href = "/homepage"}
+//               className="w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition"
+//             >
+//               Try Again
+//             </button>
+//           </div>
+//         )}
+//       </div>
+//     </div>
+//   );
+// }
+
+'use client';
+
+import { useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
 
 export default function PaymentVerify() {
+  const searchParams = useSearchParams();
+
   const [isWorked, setIsWorked] = useState(null);
   const [error, setError] = useState(null);
   const [userId, setUserId] = useState(null);
   const [subId, setSubId] = useState(null);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
 
-  const searchParams = useSearchParams();
-  const status = searchParams.get("status");
-  const paymentId = searchParams.get("payment_ref");
+  const status = searchParams.get('status');
+  const paymentId = searchParams.get('payment_ref');
 
-  // Get userId and subId on client side
+  // Initialize all values from query/localStorage
   useEffect(() => {
     const storedUserId = localStorage.getItem('userId');
-    const storedSubId = searchParams.get("subId");
+    const querySubId = searchParams.get('subId');
+    const queryStartDate = searchParams.get('start_date');
+    const queryEndDate = searchParams.get('end_date');
 
     setUserId(storedUserId);
-    setSubId(storedSubId);
+    setSubId(querySubId);
+    setStartDate(queryStartDate);
+    setEndDate(queryEndDate);
 
-    console.log('Received parameters:', {
+    console.log('Received params:', {
       status,
       paymentId,
-      userId: storedUserId,
-      subId: storedSubId,
+      storedUserId,
+      querySubId,
+      queryStartDate,
+      queryEndDate,
     });
-  }, [searchParams, status, paymentId]);
+  }, [searchParams]);
 
-  // Verify payment once data is loaded
+  // Verify payment once everything is available
   useEffect(() => {
-    if (!userId || !subId) return;
+    if (!userId || !subId || !startDate || !endDate) return;
 
-    console.log('Verification useEffect triggered');
-
-    if (status === "failed") {
-      console.log('Immediate failure detected');
+    if (status === 'failed') {
       setIsWorked(false);
-      setError("Payment failed. Please try again.");
+      setError('Payment failed. Please try again.');
       return;
     }
 
-    if (status !== "success" || !paymentId) {
-      console.log('Missing required parameters:', {
-        hasStatus: !!status,
-        hasPaymentId: !!paymentId,
-        hasUserId: !!userId,
-        hasSubId: !!subId,
-      });
-      return;
-    }
+    if (status !== 'success' || !paymentId) return;
 
-    async function verifyAndAddUserSubscription() {
-      console.log('Starting verification...');
+    async function verifyPayment() {
       try {
-        const url = `http://localhost:8000/ELACO/subcription/verify/${paymentId}?idUser=${userId}&subId=${subId}`;
-        console.log('Making request to:', url);
+        const url = `http://localhost:8000/ELACO/subcription/verify/${paymentId}?idUser=${userId}&subId=${subId}&start_date=${encodeURIComponent(startDate)}&end_date=${encodeURIComponent(endDate)}`;
+
+        console.log('Sending request to:', url);
 
         const response = await fetch(url, {
-          method: "GET",
-          credentials: "include",
+          method: 'GET',
+          credentials: 'include',
           headers: {
             'Content-Type': 'application/json',
-          }
+          },
         });
-
-        console.log('Response status:', response.status);
 
         if (!response.ok) {
           const errorText = await response.text();
-          throw new Error(errorText || "Payment verification failed");
+          throw new Error(errorText || 'Payment verification failed');
         }
 
         const resData = await response.json();
-        console.log('Verification response:', resData);
+        console.log('Verification result:', resData);
 
-        if (resData.status !== "success") {
-          throw new Error(resData.message || "Payment was not successful");
+        if (resData.status !== 'success') {
+          throw new Error(resData.message || 'Unexpected error');
         }
 
         setIsWorked(true);
-      } catch (error) {
-        console.error("Full error details:", error);
-        setError(error.message);
+      } catch (err) {
+        console.error('Verification error:', err);
         setIsWorked(false);
+        setError(err.message);
       }
     }
 
-    verifyAndAddUserSubscription();
-  }, [status, paymentId, userId, subId]);
+    verifyPayment();
+  }, [userId, subId, status, paymentId, startDate, endDate]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50 p-4">
       <div className="w-full max-w-md bg-white rounded-xl shadow-2xl p-8 text-center">
-        {/* Loading */}
-        {isWorked === null && status === "success" && (
+        {isWorked === null && status === 'success' && (
           <div className="space-y-4">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto" />
             <p className="text-gray-600 text-lg">Verifying your payment...</p>
           </div>
         )}
 
-        {/* Success */}
         {isWorked === true && (
           <div className="space-y-4">
             <FaCheckCircle className="text-6xl text-green-500 mx-auto animate-bounce" />
             <h2 className="text-2xl font-bold text-green-600">Payment Successful!</h2>
             <button
-              onClick={() => window.location.href = "/homepage"}
+              onClick={() => window.location.href = '/homepage'}
               className="w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 transition"
             >
               Go to Dashboard
@@ -117,14 +259,13 @@ export default function PaymentVerify() {
           </div>
         )}
 
-        {/* Failure */}
         {isWorked === false && (
           <div className="space-y-4">
             <FaTimesCircle className="text-6xl text-red-500 mx-auto animate-shake" />
             <h2 className="text-2xl font-bold text-red-600">Payment Failed</h2>
-            <p className="text-gray-600">{error || "Something went wrong. Please try again."}</p>
+            <p className="text-gray-600">{error || 'Something went wrong. Please try again.'}</p>
             <button
-              onClick={() => window.location.href = "/homepage"}
+              onClick={() => window.location.href = '/homepage'}
               className="w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition"
             >
               Try Again
